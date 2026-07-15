@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests"
+    >
+    <meta name="referrer" content="no-referrer">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f7c95c">
+    <meta
+      name="description"
+      content="スペース・クリック・タップで群れとリズムを合わせる、オリジナルの鳥リズムゲーム。"
+    >
+    <meta property="og:title" content="トリ・ステップ・パレード">
+    <meta property="og:description" content="群れと一緒に、50歩ぴったり。満点100点のブラウザリズムゲーム。">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>トリ・ステップ・パレード</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#game">ゲームへ移動</a>
+
+    <header class="site-header">
+      <div class="brand" aria-label="トリ・ステップ・パレード">
+        <span class="brand__eyebrow">ONE-BUTTON RHYTHM GAME</span>
+        <span class="brand__title">トリ・ステップ・パレード</span>
+      </div>
+      <button class="icon-button" id="muteButton" type="button" aria-pressed="false">
+        <span aria-hidden="true" id="muteIcon">♪</span>
+        <span id="muteLabel">サウンド ON</span>
+      </button>
+    </header>
+
+    <main id="game" class="page-shell">
+      <section class="game-card" aria-labelledby="gameTitle">
+        <div class="hud" aria-label="ゲーム情報">
+          <div class="hud__item">
+            <span class="hud__label">SCORE</span>
+            <strong class="hud__value"><span id="score">0</span><span class="hud__unit"> / 100</span></strong>
+          </div>
+          <div class="hud__center">
+            <h1 id="gameTitle">群れの足音に、ぴたり。</h1>
+            <p id="progressText">全50歩</p>
+          </div>
+          <div class="hud__item hud__item--right">
+            <span class="hud__label">TIME</span>
+            <strong class="hud__value" id="time">1:06</strong>
+          </div>
+        </div>
+
+        <div
+          id="stage"
+          class="stage stage--ready"
+          role="button"
+          tabindex="0"
+          aria-label="リズム入力エリア。ゲーム中にクリックまたはタップすると鳥が動きます。"
+          aria-describedby="controlHint"
+        >
+          <div class="sun" aria-hidden="true"></div>
+          <div class="cloud cloud--one" aria-hidden="true"></div>
+          <div class="cloud cloud--two" aria-hidden="true"></div>
+          <div class="horizon" aria-hidden="true"></div>
+          <div class="ground-lines" aria-hidden="true"></div>
+
+          <div class="flock flock--back" aria-hidden="true">
+            <span class="bird-sprite companion companion--1"></span>
+            <span class="bird-sprite companion companion--2"></span>
+            <span class="bird-sprite companion companion--3"></span>
+            <span class="bird-sprite companion companion--4"></span>
+          </div>
+
+          <div class="flock flock--front" aria-hidden="true">
+            <span class="bird-sprite companion companion--5"></span>
+            <span class="bird-sprite companion companion--6"></span>
+            <span class="bird-sprite companion companion--7"></span>
+          </div>
+
+          <div class="player-wrap" id="playerWrap">
+            <span class="you-badge">YOU</span>
+            <div id="playerBird" class="bird-sprite player-bird" data-pose="step-left" aria-hidden="true"></div>
+          </div>
+
+          <div class="cue" id="cue" aria-live="polite" aria-atomic="true">
+            <span class="cue__small" id="cueSmall">READY?</span>
+            <strong id="cueText">音をオンにしてスタート</strong>
+          </div>
+
+          <div class="start-overlay" id="startOverlay">
+            <div class="start-panel">
+              <p class="start-panel__kicker">50 STEPS · 100 POINTS</p>
+              <h2>群れと同じ瞬間に<br>一歩を踏み出そう</h2>
+              <p>強い拍で入力。掛け声が来たら、最後の「ビャー！」でジャンプ！</p>
+              <button class="primary-button" id="startButton" type="button" disabled>
+                <span id="startButtonText">音を準備中…</span>
+                <span aria-hidden="true">→</span>
+              </button>
+              <p class="start-panel__note">音が出ます。イヤホン推奨です。</p>
+            </div>
+          </div>
+
+          <button class="resume-button" id="resumeButton" type="button" hidden>ゲームに戻る</button>
+        </div>
+
+        <section class="timing-panel" aria-labelledby="timingTitle">
+          <div class="timing-panel__header">
+            <div>
+              <span class="section-kicker">TIMING MONITOR</span>
+              <h2 id="timingTitle">入力タイミング</h2>
+            </div>
+            <div class="last-judgement" id="lastJudgement" aria-live="polite" aria-atomic="true">
+              <strong>—</strong>
+              <span>ここに判定が出ます</span>
+            </div>
+          </div>
+
+          <div class="timing-ruler" aria-hidden="true">
+            <span class="timing-ruler__label timing-ruler__label--early">はやい</span>
+            <span class="timing-ruler__label timing-ruler__label--just">ジャスト</span>
+            <span class="timing-ruler__label timing-ruler__label--late">おそい</span>
+            <span class="timing-ruler__zone timing-ruler__zone--good"></span>
+            <span class="timing-ruler__zone timing-ruler__zone--perfect"></span>
+            <span class="timing-ruler__center"></span>
+            <ol class="timing-history" id="timingHistory"></ol>
+          </div>
+
+          <div class="timing-legend" aria-label="判定の説明">
+            <span><i class="legend-dot legend-dot--perfect"></i>PERFECT +2</span>
+            <span><i class="legend-dot legend-dot--good"></i>GOOD +1</span>
+            <span><i class="legend-dot legend-dot--miss"></i>MISS +0</span>
+          </div>
+        </section>
+
+        <div class="controls">
+          <p id="controlHint"><kbd>SPACE</kbd> または 画面をクリック／タップ</p>
+          <button class="text-button" id="restartButton" type="button" disabled>はじめから</button>
+        </div>
+      </section>
+
+      <section class="how-to" aria-labelledby="howToTitle">
+        <span class="section-kicker">HOW TO PLAY</span>
+        <h2 id="howToTitle">遊び方は、一歩だけ。</h2>
+        <div class="how-to__grid">
+          <article>
+            <span class="step-number">01</span>
+            <h3>強い拍で入力</h3>
+            <p>足音の「タン」に合わせてスペース、クリック、またはタップ。</p>
+          </article>
+          <article>
+            <span class="step-number">02</span>
+            <h3>掛け声を聴く</h3>
+            <p>「ピーピャコ…」の最後がジャンプの合図。画面より耳を信じよう。</p>
+          </article>
+          <article>
+            <span class="step-number">03</span>
+            <h3>100点をめざす</h3>
+            <p>PERFECTは2点、GOODは1点、MISSは0点。全50回で満点100点。</p>
+          </article>
+        </div>
+      </section>
+
+      <p class="disclaimer">
+        本作はファンメイドのオリジナル作品で、任天堂および「リズム天国」シリーズとは関係ありません。
+      </p>
+    </main>
+
+    <dialog class="result-dialog" id="resultDialog" aria-labelledby="resultTitle">
+      <div class="result-dialog__inner">
+        <button class="dialog-close" id="dialogClose" type="button" aria-label="結果を閉じる">×</button>
+        <span class="result-dialog__kicker">PARADE COMPLETE!</span>
+        <h2 id="resultTitle">群れの旅はつづく</h2>
+        <div class="result-score">
+          <strong id="resultScore">0</strong>
+          <span>/ 100</span>
+        </div>
+        <p class="result-message" id="resultMessage"></p>
+        <dl class="result-breakdown">
+          <div><dt>PERFECT</dt><dd id="perfectCount">0</dd></div>
+          <div><dt>GOOD</dt><dd id="goodCount">0</dd></div>
+          <div><dt>MISS</dt><dd id="missCount">0</dd></div>
+        </dl>
+        <div class="result-actions">
+          <button class="primary-button" id="playAgainButton" type="button">もう一度</button>
+          <button class="x-button" id="shareButton" type="button"><span aria-hidden="true">𝕏</span> 結果をポスト</button>
+        </div>
+        <p class="share-note">結果は端末に保存されません。</p>
+      </div>
+    </dialog>
+
+    <noscript>このゲームを遊ぶにはJavaScriptを有効にしてください。</noscript>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
