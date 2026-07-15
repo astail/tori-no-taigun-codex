@@ -13,3 +13,8 @@ updates:
       interval: monthly
     open-pull-requests-limit: 2
     labels: [dependencies, security]
+    ignore:
+      # Node 24 is the current LTS line; keep receiving 24.x security updates
+      # without automatically moving the build to the non-LTS Node 26 line.
+      - dependency-name: node
+        update-types: [version-update:semver-major]
