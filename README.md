@@ -1,5 +1,17 @@
 # トリ・ステップ・パレード
 
+```
+╭─────────────────────────────────────────────────╮
+│ >_ OpenAI Codex (v0.144.4)                      │
+│                                                 │
+│ model:     gpt-5.6-sol xhigh   /model to change │
+│ directory: ~/git/tori-no-taigun-codex           │
+╰─────────────────────────────────────────────────╯
+
+30m
+```
+
+
 群れの足音に合わせて、スペース・クリック・タップで遊ぶ1ボタンのオリジナルリズムゲームです。約66秒、全50入力。`PERFECT = 2点`、`GOOD = 1点`、`MISS = 0点`で満点は100点です。
 
 公開URL: <https://astail.github.io/tori-no-taigun-codex/>
